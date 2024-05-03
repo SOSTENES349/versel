@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *{
+            margin: 8px;
+            padding: 0px;
+        }
+
+        button{
+            width: 100px;
+            height: 50px;
+            border-radius: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            
+            color: black;
+        }
+
+        body{
+            background-image: url('https://static1.cbrimages.com/wordpress/wp-content/uploads/2021/11/yoda-and-darth-vader.jpg'); /* Adicionando uma imagem de fundo */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Fixando a imagem de fundo */
+            color:#a9f1ee;
+            text-align: center;
+            font-size: 30px;
+            
+            
+        }
+
+        select{
+            width:170px;
+            height: 24px;
+            text-align: center;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 20px;
+            color: black;
+        }
+
+        .vencedor-img {
+            display: none; /* Por padrão, a imagem de vencedor será oculta */
+            max-width: 400px; /* Tamanho máximo da imagem de vencedor */
+            margin: 20px auto; /* Centralizando a imagem */
+            border-radius: 50px;
+        }
+    </style>
+    <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
+    <script>
+        $(document).ready(function(){
+            var todos = [];
+
+            //função construtora do objeto personagem
+            function Personagem(Tipo, Nome, Forca, Imagem) {
+                this.Tipo = Tipo;
+                this.Nome = Nome;
+                this.Forca = new Number(Forca);
+                this.Imagem = Imagem;
+            }
+
+            //inserindo personagens no array
+            todos.push(new Personagem('Venceu', 'Obi-Wan', '', 'https://stories.cnnbrasil.com.br/wp-content/uploads/sites/9/2022/02/image-150.png'));
+            todos.push(new Personagem('Venceu', 'Yoda', '', 'https://disneyplusbrasil.com.br/wp-content/uploads/2023/06/Yoda-e-a-Forca.jpg'));
+            todos.push(new Personagem('Venceu', 'Darth Vader', '', 'https://i.pinimg.com/564x/c7/41/76/c74176b662dbce095f19dbeb56c19d69.jpg'));
+            todos.push(new Personagem('Venceu', 'Darth Sidious', '', 'https://i.pinimg.com/736x/0b/13/b5/0b13b59b14a80f2f6b8398eac3fa84d8.jpg'));
+
+            //inserindo nomes nas listas de opções
+            $('<option>' + todos[0].Nome + '</option>').appendTo('#selectJ').attr('value', 0);
+            $('<option>' + todos[1].Nome + '</option>').appendTo('#selectJ').attr('value', 1);
+            $('<option>' + todos[2].Nome + '</option>').appendTo('#selectS').attr('value', 2);
+            $('<option>' + todos[3].Nome + '</option>').appendTo('#selectS').attr('value', 3);
+
+            //função para definir a força
+            function DefinirForca() {
+                var minhaForca = 0;
+                for (var i = 0; i < 3; i++) {
+                    minhaForca += Math.floor(Math.random() * 6 + 1);
+                }
+                return minhaForca;
+            }
+
+            //função lutar
+            function Lutar() {
+                //estado inicial da animação
+                $('#pV').html('').css({'font-size':'16px'});
+
+                var j = todos[$('#selectJ').val()];
+                var s = todos[$('#selectS').val()];
+
+                j.Forca = DefinirForca();
+                s.Forca = DefinirForca();
+
+                if (j.Forca > s.Forca) { 
+                    $('#pV').html(j.Nome + ' , ' + j.Tipo).animate({'fontSize' : '60px'});
+                    $('.vencedor-img').attr('src', j.Imagem).show(); /* Exibe a imagem do personagem vencedor */
+                }
+                else if (j.Forca < s.Forca) { 
+                    $('#pV').html(s.Nome + ' , ' + s.Tipo).animate({'fontSize' : '60px'});
+                    $('.vencedor-img').attr('src', s.Imagem).show(); /* Exibe a imagem do personagem vencedor */
+                }
+                else {
+                    $('#pV').html('Não houve vencedor');
+                    $('.vencedor-img').hide(); /* Oculta a imagem de vencedor caso não haja vencedor */
+                }
+
+                $('#pJ').html(j.Nome + '. Teste de força: ' + j.Forca);
+                $('#pS').html(s.Nome + '. Teste de força: ' + s.Forca);
+            }
+
+            //ação do botão
+            $('#lutar').click(Lutar);
+        });
+    </script>
+    <title>Document</title>
+</head>
+<body>
+    <h1>Selecionar Personagem</h1>
+    <div>
+        Jedi:<select id='selectJ'></select>
+        Sith:<select id='selectS'></select>
+    </div>
+
+    <button id='lutar'>Lutar</button>
+    <p id='pJ'></p>
+    <p id='pS'></p>
+    <p id='pV'></p>
+
+    <!-- Espaço para exibir a imagem do vencedor -->
+    <img class="vencedor-img" src="" alt="Vencedor" />
+</body>
+</html>
